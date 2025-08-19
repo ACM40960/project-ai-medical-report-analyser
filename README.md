@@ -67,5 +67,3 @@ The system was tested on **3 patient reports** with ~30 sample queries.
 - **Sushmitha B (24209298)**  
 - **Kritheshvar KRV (24231949)**  
 
-
-## 📂 Repository Structure  
