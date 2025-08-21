@@ -1,0 +1,4 @@
+session_id,ts,avg_faithfulness,avg_helpfulness,turns_scored,avg_latency_ms_total,avg_latency_ms_retrieval,avg_latency_ms_llm,retrieval_success_rate_pct,grounded_in_patient_rate_pct,helpbook_cite_rate_pct,fallback_rate_pct,empty_context_rate_pct,avg_context_chars,avg_answer_chars,avg_retrieved_docs_patient,avg_retrieved_docs_helpbook,hallucination_rate_pct,patient_index,general_index
+38a17fa5-6f7f-4b89-93ce-f8e077158040,2025-08-14 15:39:04,0.5,1.0,2,7997.05,5266.05,2731.0,100.0,50.0,50.0,0.0,0.0,13145.5,577.5,10.0,6.0,0.0,patient-reports,medical-helpbook
+8b63c1a1-2a32-4748-95ff-4215ea34832c,2025-08-14 16:59:09,1.0,0.5,2,19024.95,6112.7,12912.25,100.0,100.0,0.0,0.0,0.0,13170.0,494.0,10.0,6.0,0.0,patient-reports,medical-helpbook
+8427dc24-f157-441d-b539-d191a96a97fe,2025-08-19 14:21:19,0.75,0.5,4,13106.33,10758.9,2347.43,100.0,100.0,0.0,0.0,0.0,11769.75,631.75,10.0,6.0,0.0,patient-reports,medical-helpbook
