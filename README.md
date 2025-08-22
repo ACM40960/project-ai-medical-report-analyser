@@ -9,180 +9,169 @@
 
 ---
 
-## 📖 Abstract  
+## 📖 Introduction  
+Healthcare generates vast amounts of unstructured clinical data. Interpreting **patient medical reports** can be time-consuming and confusing for non-specialists. Large Language Models (LLMs) are powerful at text synthesis but prone to **hallucination** when used without grounding.  
 
-The **AI Medical Report Analyser** is a Retrieval-Augmented Generation (RAG) chatbot designed to **interpret patient medical reports**.  
-- It embeds **helper documents** (reference handbook) and **patient PDFs/TXTs** into a Pinecone vector database.  
-- Queries are answered using **Google Gemini** via LangChain, grounded in the retrieved evidence.  
-- If knowledge is missing, the app falls back to **DuckDuckGo search**.  
-- A **Streamlit UI** provides easy uploads, chat, and automatic metrics tracking.  
+This project builds a **Retrieval-Augmented Generation (RAG)** assistant that ensures **trustworthy, cited answers** to patient queries. By embedding both **reference helper documents** and **patient PDFs**, the system retrieves relevant evidence before passing it to an LLM (Gemini 1.5 Flash). The result is a **transparent and educational chatbot** that can summarise, interpret, and explain medical reports.  
 
-⚠️ **Note**: This application is **educational only** — it does not provide medical diagnoses.  
+⚠️ *Disclaimer: This project is for educational use only. It is not a medical diagnostic tool.*  
 
 ---
 
-## 🎯 System Goals  
+## 🎯 Objectives  
+- Provide **faithful, source-grounded answers** based on patient data.  
+- Ensure **traceability** by citing whether information came from `[patient]`, `[helpbook]`, or `[web]`.  
+- Minimise hallucinations by enforcing retrieval-first prompting.  
+- Build a **user-friendly Streamlit app** for uploads, chat, and metrics.  
+- Support **evaluation metrics** (faithfulness, helpfulness, latency, hallucination rate).  
 
-- ✅ Grounded answers with citations  
-- ✅ Minimise hallucinations with helper docs + patient data  
-- ✅ Transparent provenance: `[patient]`, `[helpbook]`, `[web]`  
-- ✅ Private: patient reports stored per session only  
+---
+
+## 🔎 Methodology  
+
+### 1. Document Ingestion  
+- **Helper Docs**: Uploaded once (from `/helperDocs`) and stored persistently.  
+- **Patient Reports**: Uploaded per session (PDF/TXT), split into 1000-char chunks with 150 overlap, tagged with `session_id`.  
+
+### 2. Embedding & Storage  
+- Embeddings: `MiniLM-L6-v2 (384-d)` from HuggingFace.  
+- Storage: **Pinecone** vector database with two indexes:  
+  - `GENERAL_INDEX` → helper docs  
+  - `PATIENT_INDEX` → per-session patient docs  
+
+### 3. Retrieval  
+- Dual retriever using **Maximal Marginal Relevance (MMR)**:  
+  - Helpbook: k=6, λ=0.2  
+  - Patient: k=10, λ=0.35 (filtered by `session_id`)  
+- If retrieval fails → fallback to **DuckDuckGo** search.  
+
+### 4. RAG Generation  
+- **Prompt template** ensures patient-first grounding and inline citations.  
+- LLM: **Gemini 1.5 Flash** with `temperature=0.2`.  
+- Conversation memory (`RunnableWithMessageHistory`) maintains context.  
+
+### 5. Output  
+- Streamlit chat displays concise 2–3 paragraph answers.  
+- Each response includes:  
+  - Key values & ranges  
+  - Citations `[patient] [helpbook] [web]`  
+  - Neutral explanatory tone  
+
+---
+
+## 📊 Evaluation  
+
+The system tracks metrics per session:  
+- **Faithfulness**: % of answers supported by context  
+- **Helpfulness**: Usefulness to the user  
+- **Latency**: Retrieval, LLM, total  
+- **Grounding rate**: How often answers cite patient/helpbook  
+- **Hallucination rate**: Answers unsupported by context  
+
+📈 Example chart:  
+![Evaluation Metrics](docs/evaluation_metrics.png)  
+
+---
+
+## 🖥️ Workflow  
+
+    %% Input
+    UI["📥 Streamlit UI<br/>• Upload Helper Docs (/helperDocs)<br/>• Upload Patient Reports<br/>• Chat Interface"]
+
+    %% Ingestion
+    INGEST["📂 Ingestion & Chunking<br/>• Parse PDFs/TXTs<br/>• Split 1000 tokens / 150 overlap<br/>• Add session metadata"]
+
+    %% Embeddings
+    EMBED["🧩 Embeddings<br/>MiniLM-L6-v2 (384-d)"]
+
+    %% Pinecone
+    STORE["🗄 Pinecone Vector Store<br/>• GENERAL_INDEX (helpbook)<br/>• PATIENT_INDEX (session)"]
+
+    %% Retrieval
+    RETRIEVE["🔎 Dual Retrieval (MMR)<br/>• Helpbook: k=6, λ=0.2<br/>• Patient: k=10, λ=0.35<br/>• Merge contexts"]
+
+    %% Fallback
+    FALLBACK["🌐 DuckDuckGo Web Search<br/>• Quick / Results tools<br/>• Used if KB insufficient"]
+
+    %% LLM
+    LLM["🤖 Gemini 1.5 Flash LLM<br/>• Patient-first prompt<br/>• Chat memory<br/>• Citations enforced"]
+
+    %% Output
+    OUT["📊 Answer & Metrics<br/>• 2–3 compact paragraphs<br/>• Inline [patient]/[helpbook]/[web]<br/>• Metrics logged"]
+
+    %% Flow
+    UI --> INGEST --> EMBED --> STORE --> RETRIEVE --> LLM --> OUT
+    RETRIEVE -->|if insufficient| FALLBACK --> LLM
 
 ---
 
 ## ✨ Features  
-
-- 📘 Upload and embed **Helper Docs** (medical reference handbooks in `/helperDocs`)  
-- 📑 Upload **Patient Reports** (PDF/TXT files) for session-based analysis  
-- 🧠 RAG-powered chat with **Gemini** (faithfulness + helpfulness scoring)  
-- 📝 Specialised tools:  
-  - **Summarise Patient Report**  
-  - **Interpret Lab Test**  
-- 🌐 **DuckDuckGo fallback** for up-to-date external info  
-- 📊 Evaluation metrics (faithfulness, helpfulness, latency, hallucination rate)  
-- 🖥️ Hosted entirely in **Streamlit**  
+- Upload & process **helper documents** once.  
+- Upload **patient reports** per session.  
+- Tools:  
+  - `RAG_QA`: answer questions with citations  
+  - `Summarise Patient Report`: concise report overview  
+  - `Interpret Lab Test`: test-level explanations  
+- **DuckDuckGo fallback** with explicit `[web]` labels.  
+- Automatic metrics logging to `session_metrics.csv`.  
 
 ---
 
-## 📂 Project Structure  
-
-```
-project-ai-medical-report-analyser/
-├── app.py             # Streamlit app (UI + workflow)
-├── agent.py           # LangChain agent & tools
-├── rag.py             # RAG pipeline (retrieval + prompt + memory)
-├── rag_tools.py       # Summarise + lab interpretation tools
-├── ingest.py          # Load & chunk PDFs/TXTs
-├── embeddings.py      # HuggingFace MiniLM embeddings
-├── vectorstore.py     # Pinecone vectorstore setup
-├── web_tools.py       # DuckDuckGo fallback tools
-├── metrics.py         # Evaluation + CSV logging
-├── helperDocs/        # 📘 Place helper docs here
-├── requirements.txt
-└── README.md
-```
+## 🛠️ Technologies Used  
+- **Streamlit** – interactive UI  
+- **LangChain** – RAG orchestration  
+- **HuggingFace Embeddings** – MiniLM-L6-v2  
+- **Pinecone** – vector store  
+- **Google Gemini 1.5 Flash** – LLM generation  
+- **DuckDuckGo API** – fallback web search  
 
 ---
 
 ## ⚙️ Installation  
 
-### Prerequisites  
-- Python 3.10+  
-- Pinecone API key  
-- Google API key (Gemini)  
-
-### Setup  
 ```bash
 git clone https://github.com/ACM40960/project-ai-medical-report-analyser.git
 cd project-ai-medical-report-analyser
 
-# create virtual environment
 python -m venv venv
-source venv/bin/activate   # Linux/Mac
-venv\Scripts\activate.ps1  # Windows PowerShell
+source venv/bin/activate  # Linux/Mac
+venv\Scripts\activate.ps1  # Windows
 
-# install dependencies
 pip install -r requirements.txt
 ```
 
-### Configure `.env`  
+Set up `.env`:  
 ```ini
 PINECONE_API_KEY=...
 PINECONE_REGION=us-east-1
 GENERAL_INDEX_NAME=medical-helpbook
 PATIENT_INDEX_NAME=patient-reports
-
 GOOGLE_API_KEY=...
 ```
 
----
-
-## ▶️ Usage  
-
-### Workflow  
-
-1️⃣ **Upload Helper Docs**  
-- Go to sidebar → *Upload Helpbook*  
-- Use the files from `/helperDocs` (provided in repo)  
-- Click **Process file** → embedded into Pinecone  
-
-2️⃣ **Upload Patient Reports**  
-- Upload patient PDF/TXT files  
-- Click **Process File** → embedded for this session only  
-
-3️⃣ **Chat**  
-- Ask: *“Summarise the report”*, *“Explain Hemoglobin”*, etc.  
-- Responses cite `[patient]`, `[helpbook]`, `[web]`  
-- Reset anytime with *Process new report* (purges patient index)  
-
+Run locally:  
 ```bash
 streamlit run app.py
 ```
-App runs at: `http://localhost:8501`  
 
 ---
 
-## 🔄 Workflow Overview  
-
-> **Important:** On first run, upload and process the **helper docs** in `/helperDocs` (once).  
-> Then upload **patient reports** for the current session. Only after that, start chatting.
-
-### Diagram  
-
-![RAG Flow](docs/README_flow.png)
-
-### What happens under the hood
-1. **Ingestion:** PDFs/TXTs are parsed (PyPDFLoader/TXT), split into 1000‑char chunks with 150 overlap.  
-2. **Embeddings:** Chunks are embedded using **MiniLM‑L6‑v2 (384‑d)**.  
-3. **Storage:** Vectors go to Pinecone — a persistent **GENERAL_INDEX** for helpbook and a session‑scoped **PATIENT_INDEX**.  
-4. **Retrieval:** Dual MMR retrievers (helpbook k=6, λ=0.2; patient k=10, λ=0.35 with `session_id` filter) fetch relevant context.  
-5. **RAG Generation:** A prompt template with **chat memory** feeds context to **Gemini 1.5 Flash**. The answer enforces inline citations `[patient]` / `[helpbook]` / `[web]`.  
-6. **Fallback:** If context is insufficient, the agent uses **DuckDuckGo** tools and clearly tags results as `[web]`.  
-7. **Metrics:** Each turn logs faithfulness, helpfulness, latency, retrieval counts, grounding %, and hallucination rate to `session_metrics.csv`.  
-
----
-
-## 📊 Evaluation Metrics  
-
-The app tracks:  
-- Faithfulness & helpfulness (auto-scored)  
-- Latency (retrieval, LLM, total)  
-- Docs retrieved (patient/helpbook)  
-- Grounding % & hallucination rate  
-
-📈 Example chart:  
-![Metrics](docs/evaluation_metrics.png)  
-
----
-
-## 🌐 Deployment  
-
-- **Local run:** `streamlit run app.py`  
-- **Public hosting:** Deploy via [Streamlit Cloud](https://streamlit.io/cloud) (recommended)  
-
----
-
-## 📌 Future Work  
-
-- 🌍 Multilingual + voice support  
-- 🧑‍⚕️ Clinician co-pilot integration  
-- 📈 More analytics dashboards  
-- 🔄 User feedback loops for prompt tuning  
+## 📌 Future Scope  
+- 🌍 Multilingual and speech-enabled interface  
+- 🧑‍⚕️ Doctor co-pilot integrations  
+- 📈 Visual dashboards for retrieval quality  
+- 🔄 Reinforcement via user feedback  
 
 ---
 
 ## 🧑‍💻 Authors  
-
 - Sushmitha B (24209228)  
-- Kritheshwar (24233914)  
+- Kritheshwar (24233914)   
 - *Projects in Maths Modelling*  
 
 ---
 
 ## 📜 License  
-
-MIT License. See [LICENSE](LICENSE).  
+MIT License – see [LICENSE](LICENSE).  
 
 ---
-
-⚠️ **Disclaimer:** This tool is for **educational purposes only** and not for clinical use.  
