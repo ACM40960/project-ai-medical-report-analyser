@@ -76,7 +76,7 @@ The system tracks metrics per session:
 
 ## 🖥️ Workflow  
 
-![Workflow Diagram](readmePics/workflow_horizontal.png)  
+![Workflow Diagram](readmePics/workflow_horizontal1.png)  
 
 *A simplified horizontal flow: UI → Ingestion & Embeddings → Pinecone → Retrieval → LLM → Answer (with DuckDuckGo fallback)*  
 
