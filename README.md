@@ -1,11 +1,6 @@
 # 🧠 AI Medical Report Analyser – RAG-powered Clinical Assistant  
 
-[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)  
-[![LangChain](https://img.shields.io/badge/Framework-LangChain-green)](https://www.langchain.com/)  
-[![Pinecone](https://img.shields.io/badge/VectorDB-Pinecone-orange)](https://www.pinecone.io/)  
-[![Google Gemini](https://img.shields.io/badge/LLM-Gemini--1.5--Flash-red)](https://ai.google.dev/gemini-api)  
-[![Streamlit](https://img.shields.io/badge/UI-Streamlit-pink)](https://streamlit.io/)  
-[![License](https://img.shields.io/badge/License-MIT-purple.svg)](LICENSE)  
+[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)  [![LangChain](https://img.shields.io/badge/Framework-LangChain-green)](https://www.langchain.com/)  [![Pinecone](https://img.shields.io/badge/VectorDB-Pinecone-orange)](https://www.pinecone.io/)  [![Google Gemini](https://img.shields.io/badge/LLM-Gemini--1.5--Flash-red)](https://ai.google.dev/gemini-api)  [![Streamlit](https://img.shields.io/badge/UI-Streamlit-pink)](https://streamlit.io/)  [![License](https://img.shields.io/badge/License-MIT-purple.svg)](LICENSE)  
 
 ---
 
@@ -59,49 +54,30 @@ This project builds a **Retrieval-Augmented Generation (RAG)** assistant that en
 
 ---
 
+## Demo 
+
+![File upload section](readmePics/side tab.png)
+![Full page](readmePics/full page.png) 
+![Chat section](readmePics/full chat.png) 
+
+
 ## 📊 Evaluation  
 
 The system tracks metrics per session:  
-- **Faithfulness**: % of answers supported by context  
+- **Faithfulness**: Percentage of answers supported by context  
 - **Helpfulness**: Usefulness to the user  
 - **Latency**: Retrieval, LLM, total  
 - **Grounding rate**: How often answers cite patient/helpbook  
 - **Hallucination rate**: Answers unsupported by context  
 
 📈 Example chart:  
-![Evaluation Metrics](docs/evaluation_metrics.png)  
+![Evaluation Metrics](readmePics/evaluation_metrics.png)  
 
 ---
 
 ## 🖥️ Workflow  
 
-    %% Input
-    UI["📥 Streamlit UI<br/>• Upload Helper Docs (/helperDocs)<br/>• Upload Patient Reports<br/>• Chat Interface"]
-
-    %% Ingestion
-    INGEST["📂 Ingestion & Chunking<br/>• Parse PDFs/TXTs<br/>• Split 1000 tokens / 150 overlap<br/>• Add session metadata"]
-
-    %% Embeddings
-    EMBED["🧩 Embeddings<br/>MiniLM-L6-v2 (384-d)"]
-
-    %% Pinecone
-    STORE["🗄 Pinecone Vector Store<br/>• GENERAL_INDEX (helpbook)<br/>• PATIENT_INDEX (session)"]
-
-    %% Retrieval
-    RETRIEVE["🔎 Dual Retrieval (MMR)<br/>• Helpbook: k=6, λ=0.2<br/>• Patient: k=10, λ=0.35<br/>• Merge contexts"]
-
-    %% Fallback
-    FALLBACK["🌐 DuckDuckGo Web Search<br/>• Quick / Results tools<br/>• Used if KB insufficient"]
-
-    %% LLM
-    LLM["🤖 Gemini 1.5 Flash LLM<br/>• Patient-first prompt<br/>• Chat memory<br/>• Citations enforced"]
-
-    %% Output
-    OUT["📊 Answer & Metrics<br/>• 2–3 compact paragraphs<br/>• Inline [patient]/[helpbook]/[web]<br/>• Metrics logged"]
-
-    %% Flow
-    UI --> INGEST --> EMBED --> STORE --> RETRIEVE --> LLM --> OUT
-    RETRIEVE -->|if insufficient| FALLBACK --> LLM
+![Evaluation Metrics](readmePics/workflow_horizontal.png) 
 
 ---
 
