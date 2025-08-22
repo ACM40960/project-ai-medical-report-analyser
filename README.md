@@ -137,13 +137,13 @@ streamlit run app.py
 - 🌍 Multilingual and speech-enabled interface  
 - 🧑‍⚕️ Doctor co-pilot integrations  
 - 📈 Visual dashboards for retrieval quality  
-- 🔄 Reinforcement via user feedback  
+- 🔄 Reinforcement via user feedback
 
 ---
 
 ## 🧑‍💻 Authors  
 - Sushmitha B (24209228)  
-- Kritheshwar (24233914)   
+- Kritheshvar (24233914)   
 - *Projects in Maths Modelling*  
 
 ---
