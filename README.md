@@ -56,7 +56,6 @@ This project builds a **Retrieval-Augmented Generation (RAG)** assistant that en
 
 ## Demo 
 
-![File upload section](readmePics/side_tab.png)
 ![Full page](readmePics/full_page.png) 
 ![Chat section](readmePics/full_chat.png) 
 
