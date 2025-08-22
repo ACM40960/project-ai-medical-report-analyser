@@ -76,7 +76,9 @@ The system tracks metrics per session:
 
 ## 🖥️ Workflow  
 
-![Evaluation Metrics](readmePics/workflow_horizontal.png) 
+![Workflow Diagram](readmePics/workflow_horizontal.png)  
+
+*A simplified horizontal flow: UI → Ingestion & Embeddings → Pinecone → Retrieval → LLM → Answer (with DuckDuckGo fallback)*  
 
 ---
 
@@ -148,5 +150,13 @@ streamlit run app.py
 
 ## 📜 License  
 MIT License – see [LICENSE](LICENSE).  
+
+---
+
+## 📚 References  
+1. Lewis, P., et al. (2020). *Retrieval-augmented generation for knowledge-intensive NLP tasks.* NeurIPS. [Link](https://proceedings.neurips.cc/paper/2020/file/6b493230205f780e1bc26945df7481e5-Paper.pdf)  
+2. Carbonell, J., & Goldstein, J. (1998). *The use of MMR, diversity-based reranking for reordering documents and producing summaries.* SIGIR. [Link](https://www.cs.cmu.edu/~jgc/publication/The_Use_MMR_Diversity_Based_LTMIR_1998.pdf)  
+3. Chen, Y., et al. (2025). *MRD-RAG: Enhancing medical diagnosis with multi-round RAG.* arXiv. [Link](https://arxiv.org/html/2504.07724v1)  
+4. Yang, R., et al. (2025). *RAG for generative AI in health care.* npj Health Systems. [Link](https://www.nature.com/articles/s44401-024-00004-1)  
 
 ---
