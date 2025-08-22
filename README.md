@@ -4,6 +4,23 @@
 
 ---
 
+## 📑 Table of Contents
+- [Introduction](#-introduction)
+- [Objectives](#-objectives)
+- [Methodology](#-methodology)
+- [Demo](#demo)
+- [Evaluation](#-evaluation)
+- [Workflow](#-workflow)
+- [Features](#-features)
+- [Technologies Used](#-technologies-used)
+- [Installation](#-installation)
+- [Future Scope](#-future-scope)
+- [Authors](#-authors)
+- [License](#-license)
+- [References](#-references)
+
+---
+
 ## 📖 Introduction  
 Healthcare generates vast amounts of unstructured clinical data. Interpreting **patient medical reports** can be time-consuming and confusing for non-specialists. Large Language Models (LLMs) are powerful at text synthesis but prone to **hallucination** when used without grounding.  
 
@@ -59,6 +76,7 @@ This project builds a **Retrieval-Augmented Generation (RAG)** assistant that en
 ![Full page](readmePics/full_page.png) 
 ![Chat section](readmePics/full_chat.png) 
 
+---
 
 ## 📊 Evaluation  
 
@@ -112,7 +130,7 @@ cd project-ai-medical-report-analyser
 
 python -m venv venv
 source venv/bin/activate  # Linux/Mac
-venv\Scripts\activate.ps1  # Windows
+venv\Scriptsctivate.ps1  # Windows
 
 pip install -r requirements.txt
 ```
@@ -143,8 +161,7 @@ streamlit run app.py
 
 ## 🧑‍💻 Authors  
 - Sushmitha B (24209228)  
-- Kritheshvar (24233914)   
-- *Projects in Maths Modelling*  
+- Kritheshvar (24233914)
 
 ---
 
@@ -158,5 +175,3 @@ MIT License – see [LICENSE](LICENSE).
 2. Carbonell, J., & Goldstein, J. (1998). *The use of MMR, diversity-based reranking for reordering documents and producing summaries.* SIGIR. [Link](https://www.cs.cmu.edu/~jgc/publication/The_Use_MMR_Diversity_Based_LTMIR_1998.pdf)  
 3. Chen, Y., et al. (2025). *MRD-RAG: Enhancing medical diagnosis with multi-round RAG.* arXiv. [Link](https://arxiv.org/html/2504.07724v1)  
 4. Yang, R., et al. (2025). *RAG for generative AI in health care.* npj Health Systems. [Link](https://www.nature.com/articles/s44401-024-00004-1)  
-
----
