@@ -16,7 +16,6 @@
 - [Installation](#-installation)
 - [Future Scope](#-future-scope)
 - [Authors](#-authors)
-- [License](#-license)
 - [References](#-references)
 
 ---
@@ -162,11 +161,6 @@ streamlit run app.py
 ## 🧑‍💻 Authors  
 - Sushmitha B (24209228)  
 - Kritheshvar (24233914)
-
----
-
-## 📜 License  
-MIT License – see [LICENSE](LICENSE).  
 
 ---
 
